@@ -1,9 +1,91 @@
 <!--index.wxml-->
 <view class="container">
+  <view class="nav">
+    <view class="cell" bind:tap="onchangeDate">{{ currYearAndMonth }}</view>
+    <view class="cell" bind:tap="onchangePerson">直属下级</view>
+    <view class="cell" bind:tap="onchangePerson">间接下级</view>
+    <view class="cell">
+      <van-dropdown-menu>
+        <van-dropdown-item id="item" title="{{ itemTitle }}">
+          <van-cell title="{{ switchTitle1 }}">
+            <van-switch
+              slot="right-icon"
+              size="24px"
+              style="height: 26px"
+              checked="{{ switch1 }}"
+              bind:change="onSwitch1Change"
+            />
+          </van-cell>
+          <van-cell title="{{ switchTitle2 }}">
+            <van-switch
+              slot="right-icon"
+              size="24px"
+              style="height: 26px"
+              checked="{{ switch2 }}"
+              bind:change="onSwitch2Change"
+            />
+          </van-cell>
+          <van-button type="info" block bind:click="onConfirm">
+            确定
+          </van-button>
+        </van-dropdown-item>
+      </van-dropdown-menu>
+    </view>
+  </view>
+
   <van-calendar
-    title="日历"
+    class="calendar"
     poppable="{{ false }}"
     show-confirm="{{ false }}"
-    class="calendar"
+    default-date="{{ today }}"
+    show-title="{{ false }}"
+    show-subtitle="{{ false }}"
+    formatter="{{ formatter }}"
+    bind:select="onSelect"
+    min-date="{{ firstDay }}"
+    max-date="{{ lastDay }}"
   />
+
+  <van-cell-group style="width: 100%">
+    <van-cell title="事假" value="2020.10.01 - 2020.10.07" />
+    <van-cell title="年假" value="内容" label="备注。。。" border="{{ false }}" />
+  </van-cell-group>
+
+  <van-popup
+    show="{{ showDatePopup }}"
+    position="bottom"
+    custom-style="height: 50%;"
+    bind:close="onDatePopupClose"
+  >
+    <van-datetime-picker
+      type="year-month"
+      value="{{ currentDate }}"
+      min-date="{{ minDate }}"
+      bind:input="onInput"
+      bind:cancel="oncancelDatePicker"
+      bind:confirm="onconfirmDatePiker"
+    />
+  </van-popup>
+
+  <van-popup
+    show="{{ showPersonPopup }}"
+    position="right"
+    custom-style="width: 50%;height:100%"
+    bind:close="onPersonPopupClose"
+  >
+    <van-index-bar>
+      <view>
+        <van-index-anchor index="A" />
+        <van-cell title="文本" />
+        <van-cell title="文本" />
+        <van-cell title="文本" />
+      </view>
+      <view>
+        <van-index-anchor index="B" />
+        <van-cell title="文本" />
+        <van-cell title="文本" />
+        <van-cell title="文本" />
+      </view>
+    </van-index-bar>
+  </van-popup>
 </view>

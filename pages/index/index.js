@@ -4,51 +4,101 @@ const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
-  },
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+    firstDay: new Date().getTime(),
+    lastDay: new Date().getTime(),
+    today: new Date().getTime(), 
+    formatter: day => day,
+
+    switchTitle1: '年假',
+    switchTitle2: '事假',
+    itemTitle: '类别',
+    switch1: true,
+    switch2: true,
+
+    showDatePopup: false,
+    showPersonPopup: false,
+
+    currentDate: new Date().getTime(),
+    currYearAndMonth: '',
+    minDate: new Date(2016,1,1).getTime()
   },
   onLoad: function () {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+    this.initDate()
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
+  onSelect (date) {
+    console.log(date)
+  },
+  // 自定义过滤器
+  formatter (day) {
+    const {date} = day
+    const month = date.getMonth() + 1;
+    const num = date.getDate();
+    const week = date.getDay()
+
+    if (day.text === new Date().getDate()) {
+      day.text = '今天'
+    }
+
+    const i = Math.floor(Math.random()*100+1)
+    const arr = ['迟到', '早退', '事假', '病假']
+
+    if (i > 60 && i <= 70) day.bottomInfo = arr[0]
+    else if (i > 70 && i <= 80) day.bottomInfo = arr[1]
+    else if (i > 80 && i <= 90) day.bottomInfo = arr[2]
+    else if (i > 90 && i <= 100) day.bottomInfo = arr[3]
+    console.log(1)
+    return day
+  },
+  // 初始化日期范围
+  initDate (date = new Date().getTime()) {
+    const now = new Date(date)
+    const currY = now.getFullYear()
+    const currM = now.getMonth() + 1
+
+    const firstDay = new Date(currY, currM - 1, 1).getTime()
+    let last
+    if ([1,3,5,7,8,10,12].includes(currM)) {
+      last = 31
+    } else if ([4,6,9,11].includes(currM)) {
+      last = 30
+    } else if (currY % 4 === 0) {
+      last = 29
+    } else {
+      last = 28
+    }
+
+    const day = new Date(firstDay)
+    const lastDay = new Date(currY, currM - 1, last).getTime()
+    const month = currM < 10 ? `0${currM}` : currM
+
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+      firstDay,
+      lastDay,
+      currYearAndMonth: currY + '-' + month,
+      formatter: day => this.formatter(day)
     })
+  },
+  onchangeDate () {
+    this.setData({ showDatePopup: true })
+  },
+  onDatePopupClose () {
+    this.setData({ showDatePopup: false })
+  },
+  onchangePerson (n) {
+    console.log(n)
+    this.setData({ showPersonPopup: true })
+  },
+  onPersonPopupClose () {
+    this.setData({ showPersonPopup: false })
+  },
+  oncancelDatePicker () {
+    this.onDatePopupClose()
+  },
+  onconfirmDatePiker ({detail}) {
+    this.initDate(detail)
+    this.onDatePopupClose()
+  },
+  getCurrMonth () {
+    return '2020-10'
   }
 })
