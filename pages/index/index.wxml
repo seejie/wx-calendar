@@ -1,10 +1,15 @@
 <!--index.wxml-->
 <view class="container">
   <view class="nav">
-    <view class="cell" bind:tap="onchangeDate">{{ currYearAndMonth }}</view>
-    <view class="cell" bind:tap="onchangePerson">直属下级</view>
-    <view class="cell" bind:tap="onchangePerson">间接下级</view>
-    <view class="cell">
+    <view class="calendar" bind:tap="onchangeDate">
+      {{ currYearAndMonth }}
+      <van-icon name="play" class="select-icon"/>
+    </view>
+
+    <view class="filter" bind:tap="onfilter">
+      筛选<van-icon name="play" class="select-icon"/>
+    </view>
+    <!-- <view class="cell">
       <van-dropdown-menu>
         <van-dropdown-item id="item" title="{{ itemTitle }}">
           <van-cell title="{{ switchTitle1 }}">
@@ -30,7 +35,7 @@
           </van-button>
         </van-dropdown-item>
       </van-dropdown-menu>
-    </view>
+    </view> -->
   </view>
 
   <van-calendar
@@ -68,24 +73,41 @@
   </van-popup>
 
   <van-popup
-    show="{{ showPersonPopup }}"
-    position="right"
-    custom-style="width: 50%;height:100%"
-    bind:close="onPersonPopupClose"
+    show="{{ showPopup }}"
+    position="left"
+    custom-style="width:80%;height:100%;background-color:#f6f6f6;"
+    bind:close="onPopupClose"
   >
-    <van-index-bar>
-      <view>
-        <van-index-anchor index="A" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
+    <view class="form-panel">
+      <view class="title">类别</view>
+      <view class="tags">
+        <view class="tag selected">年假</view>
+        <view class="tag selected">事假</view>
       </view>
-      <view>
-        <van-index-anchor index="B" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
-        <van-cell title="文本" />
+    </view>
+
+    <view class="form-panel">
+      <view class="title">直线下属</view>
+      <view class="tags">
+        <view class="tag">啦啦啦</view>
+        <view class="tag">张三</view>
+        <view class="tag">李四</view>
+        <view class="tag">王五</view>
+        <view class="tag">赵六</view>
+        <view class="tag">7777777777</view>
       </view>
-    </van-index-bar>
+    </view>
+
+    <view class="form-panel">
+      <view class="title">隔级下属</view>
+      <view class="tags">
+        <view class="tag">啦啦啦</view>
+        <view class="tag">张三</view>
+        <view class="tag">李四</view>
+        <view class="tag">王五</view>
+        <view class="tag">赵六</view>
+        <view class="tag">7777777777</view>
+      </view>
+    </view>
   </van-popup>
 </view>

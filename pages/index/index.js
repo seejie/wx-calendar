@@ -11,12 +11,12 @@ Page({
 
     switchTitle1: '年假',
     switchTitle2: '事假',
-    itemTitle: '类别',
+    itemTitle: '筛选',
     switch1: true,
     switch2: true,
 
+    showPopup: false,
     showDatePopup: false,
-    showPersonPopup: false,
 
     currentDate: new Date().getTime(),
     currYearAndMonth: '',
@@ -85,11 +85,10 @@ Page({
     this.setData({ showDatePopup: false })
   },
   onchangePerson (n) {
-    console.log(n)
-    this.setData({ showPersonPopup: true })
+    
   },
-  onPersonPopupClose () {
-    this.setData({ showPersonPopup: false })
+  onPopupClose () {
+    this.setData({ showPopup: false })
   },
   oncancelDatePicker () {
     this.onDatePopupClose()
@@ -100,5 +99,8 @@ Page({
   },
   getCurrMonth () {
     return '2020-10'
+  },
+  onfilter () {
+    this.setData({ showPopup: true })
   }
 })
