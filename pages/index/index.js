@@ -1,8 +1,8 @@
 //index.js
 //获取应用实例
 const app = getApp()
-import mock from './mock'
-import constant from '../constant/index'
+import { staffList, minDate, maxDate } from '../mock'
+import constant from '../constant'
 import { deepCopy } from '../utils'
 
 Page({
@@ -15,9 +15,10 @@ Page({
     showPopup: false,
     showDatePopup: false,
 
-    currentDate: new Date().getTime(),
-    currYearAndMonth: '',
-    minDate: new Date(2016,1,1).getTime(),
+    currDate: new Date().getTime(),
+    yearMonth: '',
+    minDate,
+    maxDate,
 
     types: constant.eventTypes,
     level1: [],
@@ -76,7 +77,7 @@ Page({
     this.setData({
       firstDay,
       lastDay,
-      currYearAndMonth: currY + '-' + month
+      yearMonth: currY + '-' + month
     })
   },
   onchangeDate () {
@@ -124,7 +125,7 @@ Page({
     //     console.log(res, '-----res-----')
     //   }
     // })
-    const staffs = mock.staffList
+    const staffs = staffList
     console.log(staffs, '-----staffs-----')
     let level1 = [], level2 = []
     staffs.forEach(el => {
@@ -162,7 +163,7 @@ Page({
     //     console.log(res, '-----res-----')
     //   }
     // })
-    const { currYearAndMonth, types, level1, level2 } = this.data
+    const { yearMonth, types, level1, level2 } = this.data
     const eventlist = types.filter(el => el.selected).map(el => el.val)
     const eventrange = eventlist.length === types.length ? ['all'] : ['range']
     const staffs = level1.concat(level2)
@@ -172,7 +173,7 @@ Page({
     if (!userlist.length) return
     
     const params = {
-      yearmonth: currYearAndMonth.replace('-', ''),
+      yearmonth: yearMonth.replace('-', ''),
       userrange,
       userlist,
       eventrange,

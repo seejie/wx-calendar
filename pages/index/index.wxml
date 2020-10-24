@@ -2,7 +2,7 @@
 <view class="container">
   <view class="nav">
     <view class="calendar" bindtap="onchangeDate">
-      {{ currYearAndMonth }}
+      {{ yearMonth }}
       <van-icon name="play" class="select-icon"/>
     </view>
 
@@ -37,8 +37,9 @@
   >
     <van-datetime-picker
       type="year-month"
-      value="{{ currentDate }}"
+      value="{{ currDate }}"
       min-date="{{ minDate }}"
+      max-date="{{ maxDate }}"
       bind:input="onInput"
       bind:cancel="onDatePopupClose"
       bind:confirm="onconfirmDatePiker"
