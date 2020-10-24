@@ -204,8 +204,9 @@ Page({
     }
 
     console.log(params, '-----params-----')
-    const events = userlist.length ? schedules.filter(el => el.username === '张三') : schedules
-    console.log(events, '-----events-----')
+    const events = schedules.filter(el => userlist.includes(el.userid))
+    console.log(events, '-----events-----') 
+    
     this.setData({ 
       // schedules, 
       schedules: events,
@@ -215,13 +216,12 @@ Page({
   },
   initEventList () {
     const { level1, level2, yearMonth, today, schedules } = this.data
-    const staffs = level1.concat(level2).filter(el => !el.selected)
+    const staffs = level1.concat(level2).filter(el => el.selected)
     const YMStr = yearMonth.replace('-', '')
     const currD = new Date(today).getDate()
 
     const list = []
     staffs.forEach(el => {
-      console.log(el, '-----el-----')
       const arr = schedules.filter(obj => obj.userid === el.id)
       console.log(arr, '-----arr-----')
       if (!arr.length) return
@@ -241,7 +241,7 @@ Page({
         })
       })
     })
-    console.log(list, '-----list-----')
+
     this.setData({ currEvents: list })
     // this.setData({ currEvents: schedules })
   }
