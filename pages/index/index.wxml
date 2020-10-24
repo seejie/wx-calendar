@@ -1,41 +1,14 @@
 <!--index.wxml-->
 <view class="container">
   <view class="nav">
-    <view class="calendar" bind:tap="onchangeDate">
+    <view class="calendar" bindtap="onchangeDate">
       {{ currYearAndMonth }}
       <van-icon name="play" class="select-icon"/>
     </view>
 
-    <view class="filter" bind:tap="onfilter">
+    <view class="filter" bindtap="onfilter">
       筛选<van-icon name="play" class="select-icon"/>
     </view>
-    <!-- <view class="cell">
-      <van-dropdown-menu>
-        <van-dropdown-item id="item" title="{{ itemTitle }}">
-          <van-cell title="{{ switchTitle1 }}">
-            <van-switch
-              slot="right-icon"
-              size="24px"
-              style="height: 26px"
-              checked="{{ switch1 }}"
-              bind:change="onSwitch1Change"
-            />
-          </van-cell>
-          <van-cell title="{{ switchTitle2 }}">
-            <van-switch
-              slot="right-icon"
-              size="24px"
-              style="height: 26px"
-              checked="{{ switch2 }}"
-              bind:change="onSwitch2Change"
-            />
-          </van-cell>
-          <van-button type="info" block bind:click="onConfirm">
-            确定
-          </van-button>
-        </van-dropdown-item>
-      </van-dropdown-menu>
-    </view> -->
   </view>
 
   <van-calendar
@@ -75,38 +48,18 @@
   <van-popup
     show="{{ showPopup }}"
     position="left"
-    custom-style="width:80%;height:100%;background-color:#f6f6f6;"
+    custom-style="width:80%;height:100%;"
     bind:close="onPopupClose"
   >
-    <view class="form-panel">
-      <view class="title">类别</view>
-      <view class="tags">
-        <view class="tag selected">年假</view>
-        <view class="tag selected">事假</view>
+    <view class="side-container">
+      <view class="main-content">
+        <tag-picker title="类别" list="{{ types }}"></tag-picker>
+        <tag-picker title="直线下属" list="{{ level1List }}"></tag-picker>
+        <tag-picker title="隔级下属" list="{{ level2List }}"></tag-picker>
       </view>
-    </view>
-
-    <view class="form-panel">
-      <view class="title">直线下属</view>
-      <view class="tags">
-        <view class="tag">啦啦啦</view>
-        <view class="tag">张三</view>
-        <view class="tag">李四</view>
-        <view class="tag">王五</view>
-        <view class="tag">赵六</view>
-        <view class="tag">7777777777</view>
-      </view>
-    </view>
-
-    <view class="form-panel">
-      <view class="title">隔级下属</view>
-      <view class="tags">
-        <view class="tag">啦啦啦</view>
-        <view class="tag">张三</view>
-        <view class="tag">李四</view>
-        <view class="tag">王五</view>
-        <view class="tag">赵六</view>
-        <view class="tag">7777777777</view>
+      <view class="btn-group">
+        <view class="btn cancel" bindtap="oncancelFilter">取消</view>
+        <view class="btn confirm" bindtap="oncancelFilter">确认</view>
       </view>
     </view>
   </van-popup>

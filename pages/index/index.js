@@ -20,7 +20,99 @@ Page({
 
     currentDate: new Date().getTime(),
     currYearAndMonth: '',
-    minDate: new Date(2016,1,1).getTime()
+    minDate: new Date(2016,1,1).getTime(),
+
+    types: [{ 
+      val: '年假', selected: true 
+    }, { 
+      val: '事假', selected: false
+    }],
+    level1List: [{ 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }],
+    level2List: [{ 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }, { 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }, { 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }, { 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }, { 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }, { 
+      val: '啦啦啦', selected: true 
+    }, { 
+      val: '张三', selected: false
+    }, { 
+      val: '李四', selected: false
+    }, { 
+      val: '王五', selected: false
+    }, { 
+      val: '赵六', selected: false
+    }, { 
+      val: '7777777777', selected: false
+    }]
   },
   onLoad: function () {
     this.initDate()
@@ -84,23 +176,23 @@ Page({
   onDatePopupClose () {
     this.setData({ showDatePopup: false })
   },
-  onchangePerson (n) {
-    
-  },
   onPopupClose () {
     this.setData({ showPopup: false })
   },
   oncancelDatePicker () {
     this.onDatePopupClose()
   },
-  onconfirmDatePiker ({detail}) {
+  onconfirmDatePiker ({ detail }) {
     this.initDate(detail)
     this.onDatePopupClose()
   },
-  getCurrMonth () {
-    return '2020-10'
-  },
   onfilter () {
     this.setData({ showPopup: true })
+  },
+  oncancelFilter () {
+    this.onPopupClose()
+  },
+  oncancelFilter () {
+    this.onPopupClose()
   }
 })

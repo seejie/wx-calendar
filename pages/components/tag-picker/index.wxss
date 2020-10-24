@@ -1,0 +1,35 @@
+.title{
+  font-size: large;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.form-panel{
+  padding: 10px 10px 30rpx 10px;
+  background-color: #fff;
+  margin-bottom: 30rpx;
+}
+
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag{
+  border: 1px solid #eee;
+  border-radius: 16rpx;
+  margin: 10rpx;
+  padding: 10rpx 10rpx;
+  width: calc(25% - 2px - 20rpx - 20rpx);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background-color: #eee;
+}
+
+.tag.selected{
+  border-color: #ee0a24;
+  color: #ee0a24;
+}

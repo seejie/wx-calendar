@@ -6,7 +6,7 @@
 .nav{
   box-sizing: border-box;
   width: 100%;
-  padding: 0 30rpx 10rpx 30rpx;
+  padding: 20rpx 30rpx;
   position: relative;
 }
 
@@ -17,7 +17,7 @@
 .filter{
   position: absolute;
   right: 35rpx;
-  top: 0;
+  top: 20rpx;
 }
 
 .select-icon{
@@ -30,38 +30,36 @@
   --calendar-height: 420px;
 }
 
-.title{
-  font-size: large;
-  font-weight: 500;
-  padding-bottom: 10px;
+.side-container{
+  height: 100vh;
+  overflow-y: scroll;
+  background-color:#f6f6f6;
+  position: relative;
 }
 
-.form-panel{
-  padding: 10px 10px 30rpx 10px;
-  background-color: #fff;
-  margin-bottom: 30rpx;
+.main-content{
+  max-height: calc(100% - 38px);
+  overflow-y: scroll;
 }
 
-.tags{
+.btn-group{
   display: flex;
-  flex-wrap: wrap;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
-.tag{
-  border: 1px solid #eee;
-  border-radius: 16rpx;
-  margin: 10rpx;
-  padding: 10rpx 10rpx;
-  width: calc(25% - 2px - 20rpx - 20rpx);
+.btn{
+  width: 50%;
   text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  border: 1px solid #eee;
-  background-color: #eee;
+  padding: 15rpx;
 }
 
-.tag.selected{
-  border-color: #ee0a24;
-  color: #ee0a24;
+.btn.cancel{
+  background-color: #fff;
+}
+
+.btn.confirm{
+  background: #ee0a24;
+  color: #fff;
 }
