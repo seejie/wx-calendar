@@ -25,33 +25,34 @@ Page({
     level2: [],
     level1Back: [],
     level2Back: [],
-    schedules: []
+    schedules: [],
+
+    currEvents: []
   },
   onLoad () {
     this.initDate()
     this.getStaffLst()
     this.getSchedules()
   },
-  onSelect (date) {
-    console.log(date)
+  onSelect ({ detail }) {
+    this.setData({ today: new Date(detail).getTime() })
+    this.initEventList()
   },
   // 自定义过滤器
   formatter (day) {
     const curr = day.date
-    const month = curr.getMonth() + 1
     const date = curr.getDate()
-    const week = curr.getDay()
 
-    const { schedules, yearMonth } = this.data
+    day.text = day.text === new Date().getDate() ? '今天' : day.text
+
+    const { schedules, yearMonth, level1, level2 } = this.data
     const YMStr = yearMonth.replace('-', '')
     const events = schedules.filter(el => el.YMonth === YMStr)
+    const staffs = level1.concat(level2).filter(el => el.selected).map(el => el.id)
 
-    if (day.text === new Date().getDate()) {
-      day.text = '今天'
-    }
-
+    if (!staffs) return day
     let sDate = false, eDate = false, mDate = false
-    const item = events.find(el => {
+    const item = events.filter(el => {
       const { eventstart, eventend } = el
       const start = eventstart.replace(YMStr, '') * 1
       const end = eventend.replace(YMStr, '') * 1
@@ -60,10 +61,19 @@ Page({
       mDate = (start < date) && (date < end)
       if (sDate || eDate || mDate) return el
     })
-    item && (day.bottomInfo = item.event)
-    const tag = `${sDate ? 'sDate ' : ''}${eDate ? 'eDate ' : ''}${mDate ? 'mDate ' : ''}`.trim()
-    tag && console.log(tag, '-----tag-----')
 
+    let tag
+    if (staffs.length === 1) {
+      item[0] && (day.bottomInfo = item[0].event)
+      tag = `${sDate ? 'sDate ' : ''}${eDate ? 'eDate ' : ''}${mDate ? 'mDate ' : ''}`.trim()
+      tag && console.log(tag, '-----tag-----')
+    } else {
+      const len = item.length
+      if (!len) return day
+      // const 
+      day.topInfo = len === 1 ? item[0].event : ''
+      day.bottomInfo = len === 1 ? item[0].username : `+ ${len} 更多`
+    }
 
     return day
   },
@@ -194,10 +204,45 @@ Page({
     }
 
     console.log(params, '-----params-----')
-    console.log(schedules, '-----schedules-----')
+    const events = userlist.length ? schedules.filter(el => el.username === '张三') : schedules
+    console.log(events, '-----events-----')
     this.setData({ 
-      schedules,
-      formatter: this.formatter
+      // schedules, 
+      schedules: events,
+      formatter: day => this.formatter(day)
     })
+    this.initEventList()
+  },
+  initEventList () {
+    const { level1, level2, yearMonth, today, schedules } = this.data
+    const staffs = level1.concat(level2).filter(el => !el.selected)
+    const YMStr = yearMonth.replace('-', '')
+    const currD = new Date(today).getDate()
+
+    const list = []
+    staffs.forEach(el => {
+      console.log(el, '-----el-----')
+      const arr = schedules.filter(obj => obj.userid === el.id)
+      console.log(arr, '-----arr-----')
+      if (!arr.length) return
+      arr.forEach(obj => {
+        const { eventstart, eventend, event, username} = obj
+        const start = eventstart.replace(YMStr, '') * 1
+        const end = eventend.replace(YMStr, '') * 1
+        const inRange = start <= currD && currD <= end
+        const sameday = start === currD && currD === end
+        
+        if (!inRange && !sameday) return
+        list.push({
+          name: username,
+          type: event,
+          // val: '11',
+          // note: '备注。。。'
+        })
+      })
+    })
+    console.log(list, '-----list-----')
+    this.setData({ currEvents: list })
+    // this.setData({ currEvents: schedules })
   }
 })

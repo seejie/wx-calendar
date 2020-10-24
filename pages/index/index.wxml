@@ -24,9 +24,16 @@
     max-date="{{ lastDay }}"
   />
 
-  <van-cell-group style="width: 100%">
-    <van-cell title="事假" value="2020.10.01 - 2020.10.07" />
-    <van-cell title="年假" value="内容" label="备注。。。" border="{{ false }}" />
+  <van-cell-group style="width: 100%"
+    wx:for="{{ currEvents }}" title="{{ item.name }}" 
+  >
+    <van-cell title="事假" wx:if="{{ item.type === '事假' }}"
+      value="{{ item.val }}" label="{{ item.note }}"
+    />
+
+    <van-cell title="年假" wx:if="{{ item.type === '年假' }}"
+      value="{{ item.val }}" label="{{ item.note }}"
+    />
   </van-cell-group>
 
   <van-popup

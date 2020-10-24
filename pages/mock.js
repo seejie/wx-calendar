@@ -3,23 +3,23 @@ const year = new Date().getFullYear()
 export const maxDate = new Date(year + 3, 11, 1).getTime()
 
 export const staffList = [{
-  userid: '202004', 
+  userid: '20200512', 
   username: '张三',
   level: 1,
   seq: 1
 }, {
-  userid: '202005', 
-  username: '王二',
+  userid: '20200514', 
+  username: '王五',
   level: 1, 
   seq: 2
 }, {
-  userid: '202006', 
+  userid: '20200513', 
   username: '李四',
   level: 2, 
   seq: 3
 }, {
-  userid: '202007', 
-  username: 'aewfawef',
+  userid: '20200515', 
+  username: '赵六',
   level: 1,
   seq: 4
 }, {
@@ -81,23 +81,30 @@ export const staffList = [{
 
 export const schedules = [{
   YMonth: '202010', 
-  event: '请假', 
+  event: '年假', 
   userid: '20200512', 
   username: '张三', 
   eventstart: '20201005', 
   eventend: '20201007'
 }, {
   YMonth: '202010', 
-  event: '请假', 
+  event: '年假', 
+  userid: '20200515', 
+  username: '赵六', 
+  eventstart: '20201020', 
+  eventend: '20201020'
+}, {
+  YMonth: '202010', 
+  event: '事假', 
   userid: '20200514', 
   username: '王五', 
   eventstart: '20201020', 
   eventend: '20201020'
 }, {
-  YMonth: '202004', 
-  event: '出差', 
+  YMonth: '202010', 
+  event: '事假', 
   userid: '20200513', 
   username: '李四', 
-  eventstart: '20200105', 
-  eventend: '20200113'
+  eventstart: '20201025', 
+  eventend: '20201025'
 }]
