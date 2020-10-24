@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
-import { staffList, minDate, maxDate } from '../mock'
+import { staffList, minDate, maxDate, schedules } from '../mock'
 import constant from '../constant'
 import { deepCopy } from '../utils'
 
@@ -25,31 +25,46 @@ Page({
     level2: [],
     level1Back: [],
     level2Back: [],
+    schedules: []
   },
   onLoad () {
     this.initDate()
     this.getStaffLst()
+    this.getSchedules()
   },
   onSelect (date) {
     console.log(date)
   },
   // 自定义过滤器
   formatter (day) {
-    const {date} = day
-    const month = date.getMonth() + 1;
-    const num = date.getDate();
-    const week = date.getDay()
+    const curr = day.date
+    const month = curr.getMonth() + 1
+    const date = curr.getDate()
+    const week = curr.getDay()
+
+    const { schedules, yearMonth } = this.data
+    const YMStr = yearMonth.replace('-', '')
+    const events = schedules.filter(el => el.YMonth === YMStr)
 
     if (day.text === new Date().getDate()) {
       day.text = '今天'
     }
 
-    const i = Math.floor(Math.random()*100+1)
-    const arr = ['事假', '病假']
+    let sDate = false, eDate = false, mDate = false
+    const item = events.find(el => {
+      const { eventstart, eventend } = el
+      const start = eventstart.replace(YMStr, '') * 1
+      const end = eventend.replace(YMStr, '') * 1
+      sDate = start === date
+      eDate = end === date
+      mDate = (start < date) && (date < end)
+      if (sDate || eDate || mDate) return el
+    })
+    item && (day.bottomInfo = item.event)
+    const tag = `${sDate ? 'sDate ' : ''}${eDate ? 'eDate ' : ''}${mDate ? 'mDate ' : ''}`.trim()
+    tag && console.log(tag, '-----tag-----')
 
-    if (i > 60 && i <= 70) day.bottomInfo = arr[0]
-    else if (i > 70 && i <= 80) day.bottomInfo = arr[1]
-    console.log(1)
+
     return day
   },
   // 初始化日期范围
@@ -152,9 +167,7 @@ Page({
     const idx = arr.findIndex(el => el.id === detail)
     arr[idx].selected = !arr[idx].selected
 
-    this.setData({
-      [id]: arr
-    })
+    this.setData({ [id]: arr })
   },
   getSchedules () {
     // wx.request({
@@ -170,7 +183,7 @@ Page({
     const userrange = staffs.find(el => !el.selected) ? ['range'] : ['all']
     const userlist = staffs.filter(el => el.selected).map(el => el.id)
 
-    if (!userlist.length) return
+    // if (!userlist.length) return
     
     const params = {
       yearmonth: yearMonth.replace('-', ''),
@@ -181,5 +194,10 @@ Page({
     }
 
     console.log(params, '-----params-----')
+    console.log(schedules, '-----schedules-----')
+    this.setData({ 
+      schedules,
+      formatter: this.formatter
+    })
   }
 })

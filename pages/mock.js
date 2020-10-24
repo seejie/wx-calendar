@@ -78,3 +78,26 @@ export const staffList = [{
   level: 2, 
   seq: 15
 }]
+
+export const schedules = [{
+  YMonth: '202010', 
+  event: '请假', 
+  userid: '20200512', 
+  username: '张三', 
+  eventstart: '20201005', 
+  eventend: '20201007'
+}, {
+  YMonth: '202010', 
+  event: '请假', 
+  userid: '20200514', 
+  username: '王五', 
+  eventstart: '20201020', 
+  eventend: '20201020'
+}, {
+  YMonth: '202004', 
+  event: '出差', 
+  userid: '20200513', 
+  username: '李四', 
+  eventstart: '20200105', 
+  eventend: '20200113'
+}]
