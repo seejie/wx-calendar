@@ -5,8 +5,7 @@
       wx:for="{{ list }}"  
       wx:key="unique"
       class="tag {{item.selected ? 'selected' : ''}}"
-      data-selected="{{ item.selected }}"
-      data-idx="{{ index }}"
+      data-id="{{ item.id }}"
       bindtap="onselected"
     >{{ item.val }}</view>
   </view>

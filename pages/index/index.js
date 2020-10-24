@@ -1,6 +1,9 @@
 //index.js
 //获取应用实例
 const app = getApp()
+import mock from './mock'
+import constant from '../constant/index'
+import { deepCopy } from '../utils'
 
 Page({
   data: {
@@ -9,12 +12,6 @@ Page({
     today: new Date().getTime(), 
     formatter: day => day,
 
-    switchTitle1: '年假',
-    switchTitle2: '事假',
-    itemTitle: '筛选',
-    switch1: true,
-    switch2: true,
-
     showPopup: false,
     showDatePopup: false,
 
@@ -22,100 +19,15 @@ Page({
     currYearAndMonth: '',
     minDate: new Date(2016,1,1).getTime(),
 
-    types: [{ 
-      val: '年假', selected: true 
-    }, { 
-      val: '事假', selected: false
-    }],
-    level1List: [{ 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }],
-    level2List: [{ 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }, { 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }, { 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }, { 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }, { 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }, { 
-      val: '啦啦啦', selected: true 
-    }, { 
-      val: '张三', selected: false
-    }, { 
-      val: '李四', selected: false
-    }, { 
-      val: '王五', selected: false
-    }, { 
-      val: '赵六', selected: false
-    }, { 
-      val: '7777777777', selected: false
-    }]
+    types: constant.eventTypes,
+    level1: [],
+    level2: [],
+    level1Back: [],
+    level2Back: [],
   },
-  onLoad: function () {
+  onLoad () {
     this.initDate()
+    this.getStaffLst()
   },
   onSelect (date) {
     console.log(date)
@@ -132,12 +44,10 @@ Page({
     }
 
     const i = Math.floor(Math.random()*100+1)
-    const arr = ['迟到', '早退', '事假', '病假']
+    const arr = ['事假', '病假']
 
     if (i > 60 && i <= 70) day.bottomInfo = arr[0]
     else if (i > 70 && i <= 80) day.bottomInfo = arr[1]
-    else if (i > 80 && i <= 90) day.bottomInfo = arr[2]
-    else if (i > 90 && i <= 100) day.bottomInfo = arr[3]
     console.log(1)
     return day
   },
@@ -166,8 +76,7 @@ Page({
     this.setData({
       firstDay,
       lastDay,
-      currYearAndMonth: currY + '-' + month,
-      formatter: day => this.formatter(day)
+      currYearAndMonth: currY + '-' + month
     })
   },
   onchangeDate () {
@@ -179,9 +88,9 @@ Page({
   onPopupClose () {
     this.setData({ showPopup: false })
   },
-  oncancelDatePicker () {
-    this.onDatePopupClose()
-  },
+  // oncancelDatePicker () {
+  //   this.onDatePopupClose()
+  // },
   onconfirmDatePiker ({ detail }) {
     this.initDate(detail)
     this.onDatePopupClose()
@@ -189,10 +98,87 @@ Page({
   onfilter () {
     this.setData({ showPopup: true })
   },
+  // 取消筛选
   oncancelFilter () {
     this.onPopupClose()
+    const { level1Back, level2Back } = this.data
+    this.setData({
+      level1: deepCopy(level1Back),
+      level2: deepCopy(level2Back)
+    })
   },
-  oncancelFilter () {
+  // 确认筛选
+  onconfirmFilter () {
     this.onPopupClose()
+    const { level1, level2 } = this.data
+    this.setData({
+      level1Back: deepCopy(level1),
+      level2Back: deepCopy(level2)
+    })
+    this.getSchedules()
+  },
+  getStaffLst () {
+    // wx.request({
+    //   url: '', 
+    //   success (res) {
+    //     console.log(res, '-----res-----')
+    //   }
+    // })
+    const staffs = mock.staffList
+    console.log(staffs, '-----staffs-----')
+    let level1 = [], level2 = []
+    staffs.forEach(el => {
+      const { userid, username, level } = el
+      const obj = {
+        id: userid,
+        val: username,
+        selected: false
+      }
+
+      if (level === 1) level1.push(obj)
+      else level2.push(obj)
+    })
+
+    this.setData({
+      level1, 
+      level2,
+      level1Back: deepCopy(level1),
+      level2Back: deepCopy(level2)
+    })
+  },
+  onTagSelected ({ target: { id }, detail }) {
+    const arr = this.data[id]
+    const idx = arr.findIndex(el => el.id === detail)
+    arr[idx].selected = !arr[idx].selected
+
+    this.setData({
+      [id]: arr
+    })
+  },
+  getSchedules () {
+    // wx.request({
+    //   url: '', 
+    //   success (res) {
+    //     console.log(res, '-----res-----')
+    //   }
+    // })
+    const { currYearAndMonth, types, level1, level2 } = this.data
+    const eventlist = types.filter(el => el.selected).map(el => el.val)
+    const eventrange = eventlist.length === types.length ? ['all'] : ['range']
+    const staffs = level1.concat(level2)
+    const userrange = staffs.find(el => !el.selected) ? ['range'] : ['all']
+    const userlist = staffs.filter(el => el.selected).map(el => el.id)
+
+    if (!userlist.length) return
+    
+    const params = {
+      yearmonth: currYearAndMonth.replace('-', ''),
+      userrange,
+      userlist,
+      eventrange,
+      eventlist
+    }
+
+    console.log(params, '-----params-----')
   }
 })

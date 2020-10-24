@@ -5,10 +5,8 @@ Component({
   },
   methods: {
     onselected ({ target: { dataset } }) {
-      const { idx, selected } = dataset
-      const arr = this.properties.list
-      arr[idx].selected = !selected
-      this.setData({ list: arr })
+      const { id } = dataset
+      this.triggerEvent('onselected', id)
     }
   }
 })

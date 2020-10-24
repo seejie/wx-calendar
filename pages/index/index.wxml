@@ -40,7 +40,7 @@
       value="{{ currentDate }}"
       min-date="{{ minDate }}"
       bind:input="onInput"
-      bind:cancel="oncancelDatePicker"
+      bind:cancel="onDatePopupClose"
       bind:confirm="onconfirmDatePiker"
     />
   </van-popup>
@@ -53,13 +53,19 @@
   >
     <view class="side-container">
       <view class="main-content">
-        <tag-picker title="类别" list="{{ types }}"></tag-picker>
-        <tag-picker title="直线下属" list="{{ level1List }}"></tag-picker>
-        <tag-picker title="隔级下属" list="{{ level2List }}"></tag-picker>
+        <tag-picker title="类别" list="{{ types }}" 
+          bind:onselected="onTagSelected" id="types"
+        ></tag-picker>
+        <tag-picker title="直线下属" list="{{ level1 }}" 
+          bind:onselected="onTagSelected" id="level1"
+        ></tag-picker>
+        <tag-picker title="隔级下属" list="{{ level2 }}" 
+          bind:onselected="onTagSelected" id="level2"
+        ></tag-picker>
       </view>
       <view class="btn-group">
         <view class="btn cancel" bindtap="oncancelFilter">取消</view>
-        <view class="btn confirm" bindtap="oncancelFilter">确认</view>
+        <view class="btn confirm" bindtap="onconfirmFilter">确认</view>
       </view>
     </view>
   </van-popup>
