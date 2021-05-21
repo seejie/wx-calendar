@@ -8,8 +8,8 @@
 
     <view>
       <van-button type="primary" size="mini" class="fn-btn" color="#1989fa" bindtap="onfilter">下属日程</van-button>
-      <van-button type="primary" size="mini" class="fn-btn" color="#ffc300">我的日程</van-button>
-      <van-button type="primary" size="mini" class="fn-btn">申请</van-button>
+      <van-button type="primary" size="mini" class="fn-btn" color="#ffc300" bindtap="myData">我的日程</van-button>
+      <van-button type="primary" size="mini" class="fn-btn" bindtap="apply">申请</van-button>
     </view>
   </view>
 

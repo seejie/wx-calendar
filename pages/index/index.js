@@ -245,7 +245,16 @@ Page({
     this.setData({ currEvents: list })
     // this.setData({ currEvents: schedules })
   },
+  // 切换日历和我标签页
   onTabChange ({detail}) {
     this.setData({ activeTab: detail })
+  },
+  // 我的日程
+  myData () {
+
+  },
+  // 申请
+  apply () {
+    
   }
 })
