@@ -89,3 +89,25 @@
   background-color: #fff;
   flex: 1;
 }
+
+.icons{
+  display: flex;
+}
+
+.icon-btn{
+  margin: 2vw;
+  display: flex;
+  align-items: center;
+}
+
+.icon-btn:nth-child(1){
+  color: #1989fa;
+}
+
+.icon-btn:nth-child(2){
+  color: #ffc300;
+}
+
+.icon-btn:nth-child(3){
+  color: red;
+}

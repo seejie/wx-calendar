@@ -34,8 +34,6 @@ Page({
     level1Back: [],
     level2Back: [],
     schedules: [],
-
-    currEvents: [],
   },
   onLoad () {
     this.initDate()
@@ -242,8 +240,6 @@ Page({
       })
     })
 
-    this.setData({ currEvents: list })
-    // this.setData({ currEvents: schedules })
   },
   // 切换日历和我标签页
   onTabChange ({detail}) {

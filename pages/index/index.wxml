@@ -26,17 +26,17 @@
     max-date="{{ lastDay }}"
   />
 
-  <van-cell-group style="width: 100%"
-    wx:for="{{ currEvents }}" wx:key="index" title="{{ item.name }}" 
-  >
-    <van-cell title="事假" wx:if="{{ item.type === '事假' }}"
-      value="{{ item.val }}" label="{{ item.note }}"
-    />
-
-    <van-cell title="年假" wx:if="{{ item.type === '年假' }}"
-      value="{{ item.val }}" label="{{ item.note }}"
-    />
-  </van-cell-group>
+  <view class="icons">
+    <view class="icon-btn">
+      <van-icon name="phone-o" />请假
+    </view>
+    <view class="icon-btn">
+      <van-icon name="like-o" />出差
+    </view>
+    <view class="icon-btn">
+      <van-icon name="star-o" />外出
+    </view>
+  </view>
 
   <van-popup
     show="{{ showDatePopup }}"
