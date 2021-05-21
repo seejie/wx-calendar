@@ -255,6 +255,8 @@ Page({
   },
   // 申请
   apply () {
-    
+    wx.navigateTo({
+      url: '/pages/apply/index',
+    })
   }
 })
