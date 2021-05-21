@@ -8,16 +8,16 @@
   width: 100%;
   padding: 20rpx 30rpx;
   position: relative;
+  display: flex;
+  justify-content: space-between;
 }
 
 .calendar{
   text-align: center;
 }
 
-.filter{
-  position: absolute;
-  right: 35rpx;
-  top: 20rpx;
+.fn-btn{
+  margin-left: 1.5vw;
 }
 
 .select-icon{
@@ -62,4 +62,28 @@
 .btn.confirm{
   background: #ee0a24;
   color: #fff;
+}
+
+.my{
+  background-color: rgba(229, 229, 229, 1);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header{
+  text-align: center;
+  padding: 3vh;
+  background-color: #fff;
+}
+
+.logo{
+  width: 400rpx;
+  height: 110rpx;
+}
+
+.cells{
+  margin: 2vh 0;
+  background-color: #fff;
+  flex: 1;
 }

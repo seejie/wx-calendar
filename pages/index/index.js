@@ -7,6 +7,14 @@ import { deepCopy } from '../utils'
 
 Page({
   data: {
+    activeTab: 'calendar',
+    user: {
+      name: '1',
+      id: '2',
+      posi: '3',
+      sys: '4',
+    },
+
     firstDay: new Date().getTime(),
     lastDay: new Date().getTime(),
     today: new Date().getTime(), 
@@ -27,12 +35,19 @@ Page({
     level2Back: [],
     schedules: [],
 
-    currEvents: []
+    currEvents: [],
   },
   onLoad () {
     this.initDate()
     this.getStaffLst()
     this.getSchedules()
+  },
+  onTagSelected ({ target: { id }, detail }) {
+    const arr = this.data[id]
+    const idx = arr.findIndex(el => el.id === detail)
+    arr[idx].selected = !arr[idx].selected
+  
+    this.setData({ [id]: arr })
   },
   onSelect ({ detail }) {
     this.setData({ today: new Date(detail).getTime() })
@@ -95,7 +110,6 @@ Page({
       last = 28
     }
 
-    const day = new Date(firstDay)
     const lastDay = new Date(currY, currM - 1, last).getTime()
     const month = currM < 10 ? `0${currM}` : currM
 
@@ -114,9 +128,6 @@ Page({
   onPopupClose () {
     this.setData({ showPopup: false })
   },
-  // oncancelDatePicker () {
-  //   this.onDatePopupClose()
-  // },
   onconfirmDatePiker ({ detail }) {
     this.initDate(detail)
     this.onDatePopupClose()
@@ -172,13 +183,6 @@ Page({
       level2Back: deepCopy(level2)
     })
   },
-  onTagSelected ({ target: { id }, detail }) {
-    const arr = this.data[id]
-    const idx = arr.findIndex(el => el.id === detail)
-    arr[idx].selected = !arr[idx].selected
-
-    this.setData({ [id]: arr })
-  },
   getSchedules () {
     // wx.request({
     //   url: '', 
@@ -186,9 +190,7 @@ Page({
     //     console.log(res, '-----res-----')
     //   }
     // })
-    const { yearMonth, types, level1, level2 } = this.data
-    const eventlist = types.filter(el => el.selected).map(el => el.val)
-    const eventrange = eventlist.length === types.length ? ['all'] : ['range']
+    const { yearMonth, level1, level2 } = this.data
     const staffs = level1.concat(level2)
     const userrange = staffs.find(el => !el.selected) ? ['range'] : ['all']
     const userlist = staffs.filter(el => el.selected).map(el => el.id)
@@ -198,9 +200,7 @@ Page({
     const params = {
       yearmonth: yearMonth.replace('-', ''),
       userrange,
-      userlist,
-      eventrange,
-      eventlist
+      userlist
     }
 
     console.log(params, '-----params-----')
@@ -244,5 +244,8 @@ Page({
 
     this.setData({ currEvents: list })
     // this.setData({ currEvents: schedules })
+  },
+  onTabChange ({detail}) {
+    this.setData({ activeTab: detail })
   }
 })

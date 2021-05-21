@@ -1,13 +1,15 @@
 <!--index.wxml-->
-<view class="container">
+<view class="container" wx:if="{{activeTab === 'calendar'}}">
   <view class="nav">
     <view class="calendar" bindtap="onchangeDate">
       {{ yearMonth }}
       <van-icon name="play" class="select-icon"/>
     </view>
 
-    <view class="filter" bindtap="onfilter">
-      筛选<van-icon name="play" class="select-icon"/>
+    <view>
+      <van-button type="primary" size="mini" class="fn-btn" color="#1989fa" bindtap="onfilter">下属日程</van-button>
+      <van-button type="primary" size="mini" class="fn-btn" color="#ffc300">我的日程</van-button>
+      <van-button type="primary" size="mini" class="fn-btn">申请</van-button>
     </view>
   </view>
 
@@ -25,7 +27,7 @@
   />
 
   <van-cell-group style="width: 100%"
-    wx:for="{{ currEvents }}" title="{{ item.name }}" 
+    wx:for="{{ currEvents }}" wx:key="index" title="{{ item.name }}" 
   >
     <van-cell title="事假" wx:if="{{ item.type === '事假' }}"
       value="{{ item.val }}" label="{{ item.note }}"
@@ -61,10 +63,7 @@
   >
     <view class="side-container">
       <view class="main-content">
-        <tag-picker title="类别" list="{{ types }}" 
-          bind:onselected="onTagSelected" id="types"
-        ></tag-picker>
-        <tag-picker title="直线下属" list="{{ level1 }}" 
+        <tag-picker title="直级下属" list="{{ level1 }}" 
           bind:onselected="onTagSelected" id="level1"
         ></tag-picker>
         <tag-picker title="隔级下属" list="{{ level2 }}" 
@@ -78,3 +77,23 @@
     </view>
   </van-popup>
 </view>
+
+<view class="my" wx:if="{{activeTab === 'my'}}">
+  <view class="header">
+    <image class="logo" src="../../logo.jpg"></image>
+  </view>
+
+  <view class="cells">
+    <van-cell-group>
+      <van-cell title="姓名" value="{{user.name}}" />
+      <van-cell title="员工号" value="{{user.id}}" />
+      <van-cell title="职位" value="{{user.posi}}" />
+      <van-cell title="系统信息" value="{{user.sys}}" />
+    </van-cell-group>
+  </view>
+</view>
+
+<van-tabbar active="{{ activeTab }}" bind:change="onTabChange">
+  <van-tabbar-item icon="calendar-o" name="calendar">日历</van-tabbar-item>
+  <van-tabbar-item icon="user-circle-o" name="my">我</van-tabbar-item>
+</van-tabbar>

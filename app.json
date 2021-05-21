@@ -18,6 +18,8 @@
     "van-popup": "vant/popup/index",
     "van-index-bar": "vant/index-bar/index",
     "van-datetime-picker": "vant/datetime-picker/index",
-    "van-icon": "vant/icon/index"
+    "van-icon": "vant/icon/index",
+    "van-tabbar": "vant/tabbar/index",
+    "van-tabbar-item": "vant/tabbar-item/index"
   }
 }
