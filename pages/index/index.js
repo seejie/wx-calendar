@@ -63,7 +63,7 @@ Page({
       }
     })
     this.getData()
-    this.getSubData()
+    // this.getSubData()
   },
   getData () {
     const month = '2021-04'
@@ -72,7 +72,21 @@ Page({
     post({
       url: api.LoadCalendar + `?month=${month}&userCode=${code}`,
       success: res => {
-        console.log(res, 22)
+        console.log(res.ViewList, 22)
+        const {UserName, UserCode, Position} = res.ViewList
+        wx.getSystemInfo({
+          success: res => {
+            console.log(res)
+            this.setData({
+              user: {
+                name: UserName,
+                id: UserCode,
+                posi: Position,
+                sys: res.model + ` ${res.system}`
+              }
+            })
+          }
+        })
       }
     })
   },
