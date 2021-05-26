@@ -2,7 +2,8 @@
 //获取应用实例
 const app = getApp()
 import { staffList, minDate, maxDate, schedules } from '../mock'
-import constant from '../constant'
+import { api } from '../api'
+import { post } from '../http'
 import { deepCopy } from '../utils'
 
 Page({
@@ -28,7 +29,6 @@ Page({
     minDate,
     maxDate,
 
-    types: constant.eventTypes,
     level1: [],
     level2: [],
     level1Back: [],
@@ -36,9 +36,56 @@ Page({
     schedules: [],
   },
   onLoad () {
+    this.userLogin()
     this.initDate()
     this.getStaffLst()
     this.getSchedules()
+  },
+  userLogin () {
+    wx.showLoading({ mask: true })
+    wx.login({
+      success: res => {
+        this.login(res.code)
+      },
+      fail: res => {
+        console.log('用户登录失败：', res)
+      },
+      complete() {
+        wx.hideLoading()
+      }
+    })
+  },
+  login (code) {
+    post({
+      url: api.WXLogin + code,
+      success: res => {
+        console.log(res, 111)
+      }
+    })
+    this.getData()
+    this.getSubData()
+  },
+  getData () {
+    const month = '2021-04'
+    const code = 'C002551'
+
+    post({
+      url: api.LoadCalendar + `?month=${month}&userCode=${code}`,
+      success: res => {
+        console.log(res, 22)
+      }
+    })
+  },
+  getSubData () {
+    const month = '2021-04'
+    const code = 'C002551'
+
+    post({
+      url: api.LoadSubCalendar + `?month=${month}&userCode=${code}`,
+      success: res => {
+        console.log(res, 33)
+      }
+    })
   },
   onTagSelected ({ target: { id }, detail }) {
     const arr = this.data[id]

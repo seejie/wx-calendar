@@ -1,1 +1,24 @@
-<view>123</view>
+<view>
+  <van-cell title="以下录入的外出计划，仅作为个人未来的行程规划。（与实际出差申请、请假申请无关）" icon="volume-o" />
+
+  <van-cell title="开始时间" is-link value="{{sDate}}" bindtap="onSelectDate" id="start"/>
+  <van-cell title="结束时间" is-link value="{{eDate}}" bindtap="onSelectDate" id="end"/>
+
+  <van-popup
+    show="{{ showDatePopup }}"
+    position="bottom"
+    custom-style="height: 50%;"
+    bind:close="onDatePopupClose"
+  >
+    <van-datetime-picker
+      type="date"
+      value="{{ currDate }}"
+      min-date="{{ minDate }}"
+      max-date="{{ maxDate }}"
+      bind:input="onInput"
+      bind:cancel="onDatePopupClose"
+      bind:confirm="onconfirmDatePiker"
+    />
+  </van-popup>
+
+</view>
