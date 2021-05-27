@@ -1,19 +1,18 @@
 //index.js
 //获取应用实例
 const app = getApp()
-import { staffList, minDate, maxDate, schedules } from '../mock'
+import { minDate, maxDate } from '../mock'
 import { api } from '../api'
 import { post } from '../http'
-import { deepCopy } from '../utils'
 
 Page({
   data: {
     activeTab: 'calendar',
     user: {
-      name: '1',
-      id: '2',
-      posi: '3',
-      sys: '4',
+      name: '',
+      id: '',
+      posi: '',
+      sys: '',
     },
 
     firstDay: new Date().getTime(),
@@ -29,17 +28,12 @@ Page({
     minDate,
     maxDate,
 
-    level1: [],
-    level2: [],
-    level1Back: [],
-    level2Back: [],
     schedules: [],
+    subordinates: []
   },
   onLoad () {
     this.userLogin()
     this.initDate()
-    this.getStaffLst()
-    this.getSchedules()
   },
   userLogin () {
     wx.showLoading({ mask: true })
@@ -59,36 +53,11 @@ Page({
     post({
       url: api.WXLogin + code,
       success: res => {
-        console.log(res, 111)
+        // console.log(res, 111)
       }
     })
-    this.getData()
-    // this.getSubData()
-  },
-  getData () {
-    const month = '2021-04'
-    const code = 'C002551'
-
-    post({
-      url: api.LoadCalendar + `?month=${month}&userCode=${code}`,
-      success: res => {
-        console.log(res.ViewList, 22)
-        const {UserName, UserCode, Position} = res.ViewList
-        wx.getSystemInfo({
-          success: res => {
-            console.log(res)
-            this.setData({
-              user: {
-                name: UserName,
-                id: UserCode,
-                posi: Position,
-                sys: res.model + ` ${res.system}`
-              }
-            })
-          }
-        })
-      }
-    })
+    this.myData()
+    this.getSubData()
   },
   getSubData () {
     const month = '2021-04'
@@ -97,58 +66,54 @@ Page({
     post({
       url: api.LoadSubCalendar + `?month=${month}&userCode=${code}`,
       success: res => {
-        console.log(res, 33)
+        const arr = []
+        res.forEach(el => {
+          el.SubCalendar.forEach(item => {
+            const exist = arr.find(obj => obj.UserId === item.UserId)
+            if (exist) return
+            arr.push(item)
+          })
+        })
+        // console.log(arr)
+        this.setData({
+          subordinates: arr
+        })
       }
     })
   },
-  onTagSelected ({ target: { id }, detail }) {
-    const arr = this.data[id]
-    const idx = arr.findIndex(el => el.id === detail)
-    arr[idx].selected = !arr[idx].selected
-  
-    this.setData({ [id]: arr })
+  onTagSelected ({ detail }) {
+    const arr = this.data.subordinates
+    const curr = arr.find(el => el.UserId === detail)
+
+    arr.forEach(el => {
+      el.selected = el.UserId === detail
+    })
+    console.log(curr.Calendar)
+    this.setData({ 
+      subordinates: arr,
+      showPopup: false,
+      schedules: curr ? curr.Calendar : this.data.schedules
+    })
   },
   onSelect ({ detail }) {
     this.setData({ today: new Date(detail).getTime() })
-    this.initEventList()
   },
   // 自定义过滤器
   formatter (day) {
-    const curr = day.date
-    const date = curr.getDate()
-
-    day.text = day.text === new Date().getDate() ? '今天' : day.text
-
-    const { schedules, yearMonth, level1, level2 } = this.data
-    const YMStr = yearMonth.replace('-', '')
-    const events = schedules.filter(el => el.YMonth === YMStr)
-    const staffs = level1.concat(level2).filter(el => el.selected).map(el => el.id)
-
-    if (!staffs) return day
-    let sDate = false, eDate = false, mDate = false
-    const item = events.filter(el => {
-      const { eventstart, eventend } = el
-      const start = eventstart.replace(YMStr, '') * 1
-      const end = eventend.replace(YMStr, '') * 1
-      sDate = start === date
-      eDate = end === date
-      mDate = (start < date) && (date < end)
-      if (sDate || eDate || mDate) return el
+    const { schedules } = this.data
+    schedules.forEach(el => {
+      const {EndDate, StartDate, Source} = el
+      const eDate = new Date(EndDate.substr(0, 10)).getTime()
+      const sDate = new Date(StartDate.substr(0, 10)).getTime()
+      const today = new Date(day.date.format('yyyy-MM-dd')).getTime()
+      if (sDate <= today && today <= eDate) {
+        if (Source == 1) day.qj = true
+        else if (Source == 2) day.cc = true
+        else day.wc = true
+        day.bottomInfo = true
+      }
     })
-
-    let tag
-    if (staffs.length === 1) {
-      item[0] && (day.bottomInfo = item[0].event)
-      tag = `${sDate ? 'sDate ' : ''}${eDate ? 'eDate ' : ''}${mDate ? 'mDate ' : ''}`.trim()
-      tag && console.log(tag, '-----tag-----')
-    } else {
-      const len = item.length
-      if (!len) return day
-      // const 
-      day.topInfo = len === 1 ? item[0].event : ''
-      day.bottomInfo = len === 1 ? item[0].username : `+ ${len} 更多`
-    }
-
+    
     return day
   },
   // 初始化日期范围
@@ -177,6 +142,22 @@ Page({
       lastDay,
       yearMonth: currY + '-' + month
     })
+
+    Date.prototype.format = function (fmt) {
+      var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "H+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+      };
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+      for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+      return fmt;
+    }
   },
   onchangeDate () {
     this.setData({ showDatePopup: true })
@@ -194,121 +175,45 @@ Page({
   onfilter () {
     this.setData({ showPopup: true })
   },
-  // 取消筛选
-  oncancelFilter () {
-    this.onPopupClose()
-    const { level1Back, level2Back } = this.data
-    this.setData({
-      level1: deepCopy(level1Back),
-      level2: deepCopy(level2Back)
-    })
-  },
-  // 确认筛选
-  onconfirmFilter () {
-    this.onPopupClose()
-    const { level1, level2 } = this.data
-    this.setData({
-      level1Back: deepCopy(level1),
-      level2Back: deepCopy(level2)
-    })
-    this.getSchedules()
-  },
-  getStaffLst () {
-    // wx.request({
-    //   url: '', 
-    //   success (res) {
-    //     console.log(res, '-----res-----')
-    //   }
-    // })
-    const staffs = staffList
-    console.log(staffs, '-----staffs-----')
-    let level1 = [], level2 = []
-    staffs.forEach(el => {
-      const { userid, username, level } = el
-      const obj = {
-        id: userid,
-        val: username,
-        selected: false
-      }
 
-      if (level === 1) level1.push(obj)
-      else level2.push(obj)
-    })
-
-    this.setData({
-      level1, 
-      level2,
-      level1Back: deepCopy(level1),
-      level2Back: deepCopy(level2)
-    })
-  },
-  getSchedules () {
-    // wx.request({
-    //   url: '', 
-    //   success (res) {
-    //     console.log(res, '-----res-----')
-    //   }
-    // })
-    const { yearMonth, level1, level2 } = this.data
-    const staffs = level1.concat(level2)
-    const userrange = staffs.find(el => !el.selected) ? ['range'] : ['all']
-    const userlist = staffs.filter(el => el.selected).map(el => el.id)
-
-    // if (!userlist.length) return
-    
-    const params = {
-      yearmonth: yearMonth.replace('-', ''),
-      userrange,
-      userlist
-    }
-
-    console.log(params, '-----params-----')
-    const events = schedules.filter(el => userlist.includes(el.userid))
-    console.log(events, '-----events-----') 
-    
-    this.setData({ 
-      // schedules, 
-      schedules: events,
-      formatter: day => this.formatter(day)
-    })
-    this.initEventList()
-  },
-  initEventList () {
-    const { level1, level2, yearMonth, today, schedules } = this.data
-    const staffs = level1.concat(level2).filter(el => el.selected)
-    const YMStr = yearMonth.replace('-', '')
-    const currD = new Date(today).getDate()
-
-    const list = []
-    staffs.forEach(el => {
-      const arr = schedules.filter(obj => obj.userid === el.id)
-      console.log(arr, '-----arr-----')
-      if (!arr.length) return
-      arr.forEach(obj => {
-        const { eventstart, eventend, event, username} = obj
-        const start = eventstart.replace(YMStr, '') * 1
-        const end = eventend.replace(YMStr, '') * 1
-        const inRange = start <= currD && currD <= end
-        const sameday = start === currD && currD === end
-        
-        if (!inRange && !sameday) return
-        list.push({
-          name: username,
-          type: event,
-          // val: '11',
-          // note: '备注。。。'
-        })
-      })
-    })
-
-  },
   // 切换日历和我标签页
   onTabChange ({detail}) {
     this.setData({ activeTab: detail })
   },
   // 我的日程
   myData () {
+    const month = '2021-04'
+    const code = 'C002551'
 
+    post({
+      url: api.LoadCalendar + `?month=${month}&userCode=${code}`,
+      success: res => {
+        // console.log(res.ViewList, 22)
+        const {UserName, UserCode, Position, Calendar} = res.ViewList
+        const arr = this.data.subordinates
+        arr.forEach(el => (el.selected = false))
+
+        this.setData({
+          schedules: Calendar,
+          formatter: day => this.formatter(day),
+          subordinates: arr
+        })
+
+        wx.getSystemInfo({
+          success: res => {
+            // console.log(res)
+            this.setData({
+              user: {
+                name: UserName,
+                id: UserCode,
+                posi: Position,
+                sys: res.model + ` ${res.system}`
+              }
+            })
+          }
+        })
+      }
+    })
   },
   // 申请
   apply () {

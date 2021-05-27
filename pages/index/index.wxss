@@ -111,3 +111,9 @@
 .icon-btn:nth-child(3){
   color: red;
 }
+
+.icon-btn > image { 
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 10rpx;
+}

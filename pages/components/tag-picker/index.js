@@ -4,8 +4,7 @@ Component({
     list: Array
   },
   methods: {
-    onselected ({ target: { dataset } }) {
-      const { id } = dataset
+    onselected ({ target: { dataset: {id} } }) {
       this.triggerEvent('onselected', id)
     }
   }

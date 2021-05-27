@@ -153,5 +153,9 @@ VantComponent({
         }
       }
     },
+    bool(n) {
+      console.log(n)
+      return true
+    }
   },
 });

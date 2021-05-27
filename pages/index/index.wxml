@@ -28,13 +28,13 @@
 
   <view class="icons">
     <view class="icon-btn">
-      <van-icon name="phone-o" />请假
+      <image src="../../icons/qj.png" />请假
     </view>
     <view class="icon-btn">
-      <van-icon name="like-o" />出差
+      <image src="../../icons/cc.png" />出差
     </view>
     <view class="icon-btn">
-      <van-icon name="star-o" />外出
+      <image src="../../icons/wc.png" />外出
     </view>
   </view>
 
@@ -63,16 +63,9 @@
   >
     <view class="side-container">
       <view class="main-content">
-        <tag-picker title="直级下属" list="{{ level1 }}" 
-          bind:onselected="onTagSelected" id="level1"
+        <tag-picker title="我的下属" list="{{ subordinates }}" 
+          bind:onselected="onTagSelected"
         ></tag-picker>
-        <tag-picker title="隔级下属" list="{{ level2 }}" 
-          bind:onselected="onTagSelected" id="level2"
-        ></tag-picker>
-      </view>
-      <view class="btn-group">
-        <view class="btn cancel" bindtap="oncancelFilter">取消</view>
-        <view class="btn confirm" bindtap="onconfirmFilter">确认</view>
       </view>
     </view>
   </van-popup>
